@@ -1,0 +1,42 @@
+name: DevSecOps Pipeline Training
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  security-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout do Código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # STEP 2: Secrets Scanning (Gitleaks)
+      - name: 2. Secrets Scanning - Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # STEP 3: SAST - Análise Estática do Código (Semgrep)
+      - name: 3. SAST - Semgrep
+        run: |
+          python3 -m pip install semgrep
+          semgrep scan --config auto --error
+
+      # STEP 4: SCA - Análise de Dependências (Grype)
+      - name: 4. SCA - Grype
+        uses: anchore/scan-action@v3
+        with:
+          path: "."
+          fail-build: true
+          severity-cutoff: "medium"
+
+      # STEP 5: Deploy (Só executa se todos os testes passarem)
+      - name: 5. Deploy em Produção
+        if: success()
+        run: echo "🚀 Aplicação segura publicada com sucesso!"
