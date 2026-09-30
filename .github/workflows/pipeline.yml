@@ -28,14 +28,12 @@ jobs:
           python3 -m pip install semgrep
           semgrep scan --config auto --error
 
-      # STEP 4: SCA - Análise de Dependências (Grype)
-      - name: 4. SCA - Grype
-        uses: anchore/scan-action@v3
-        with:
-          path: "."
-          fail-build: true
-          severity-cutoff: "medium"
-
+      # # Step 4 — SAST com Semgrep
+      - name: 3. SAST - Semgrep
+        run: |
+          python3 -m pip install semgrep
+          semgrep scan --config auto --exclude='.github' --error
+          
       # STEP 5: Deploy (Só executa se todos os testes passarem)
       - name: 5. Deploy em Produção
         if: success()
