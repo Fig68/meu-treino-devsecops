@@ -5,7 +5,7 @@ function carregarMensagem() {
   // CORREÇÃO SAST: Uso de textContent em vez de innerHTML (Evita XSS)
   document.getElementById("boas-vindas").textContent = "Olá, " + usuario;
   
-  // CORREÇÃO SAST: Removidos o eval() e a chave hardcoded
+  // CORREÇÃO SAST: Removidos o eval() e a chave AWS hardcoded
   const resultado = 2 + 2;
   console.log("Resultado:", resultado);
 }
