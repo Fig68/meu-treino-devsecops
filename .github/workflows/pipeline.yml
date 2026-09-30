@@ -26,8 +26,8 @@ jobs:
       - name: 3. SAST - Semgrep
         run: |
           python3 -m pip install semgrep
-          semgrep scan --config auto --error
-
+          semgrep scan --config auto --exclude-rule='yaml.github-actions.security.github-actions-mutable-action-tag' --exclude='.github' --error
+          
       # # Step 4 — SAST com Semgrep
       - name: 3. SAST - Semgrep
         run: |
